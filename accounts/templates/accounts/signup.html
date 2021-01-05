@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block title %}Sign Up{% endblock %}
+
+{% block content %}
+
+<head>
+  <title></title>
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500,700,900" rel="stylesheet">
+
+</head>
+
+
+<body class="fullscreen-centered page-register">
+
+    <!-- ======== @Region: #content ======== -->
+    <br>
+      <h6 style="color:red">
+      {% if error %}
+        {{error}}
+      {% endif %}
+      </h6>
+    <br>
+    
+    <div id="block">
+      <div class="row">
+        <div class="col-sm-6 col-sm-offset-3">
+          <div class="panel panel-default">
+            <div class="panel-body">
+              <form enctype="multipart/form-data" action="{% url 'signup' cli=client %}" method='POST' role="form">
+                {% csrf_token %}
+                <fieldset>
+                  <legend class="panel-title" style="font-weight: bolder;">SignUp</legend>
+                  <div class="form-group">
+                    <div class="input-group input-group-lg">
+                      <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
+                      <input type="text" name="username" placeholder="Username (Used for login)" field="required">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group input-group-lg">
+                      <span class="input-group-addon"><i class="fa fa-fw fa-envelope"></i></span>
+                      <input type="text" name="email" placeholder="Email" field="required">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group input-group-lg">
+                      <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
+                      <input type="password" name="password1" placeholder="Password" field="required">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group input-group-lg">
+                      <span class="input-group-addon"><i class="fa fa-fw fa-lock"></i></span>
+                      <input type="password" name="password2" placeholder="Retype Password" field="required">
+                    </div>
+                  </div>
+                  {% if client == 'student' %}
+                  <div class="form-group">
+                    <div class="input-group input-group-lg">
+                      <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
+                      <input type="text" name="first_name" placeholder="First Name" field="required">
+                    </div>
+                  </div>
+                  <div class="form-group">
+                    <div class="input-group input-group-lg">
+                      <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
+                      <input type="text" name="last_name" placeholder="Last Name">
+                    </div>
+                  </div> 
+                  {% else %}
+                  <div class="form-group">
+                    <div class="input-group input-group-lg">
+                      <span class="input-group-addon"><i class="fa fa-fw fa-user"></i></span>
+                      <input type="text" name="school_name" placeholder="School Name" field="required">
+                    </div>
+                  </div> 
+                  {% endif %}          
+                  <input class="col-md-3 mb-3 btn btn-lg btn-primary btn-block" type="submit" value="Sign Up">
+                </fieldset>
+              </form>
+              <br>
+              <br>
+              <br>
+              <div class="credits">
+          </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+{% endblock %}

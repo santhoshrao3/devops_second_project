@@ -7,4 +7,5 @@ urlpatterns = [
     path('begin_quiz/<int:id>', views.begin_quiz, name='begin_quiz'),
     path('quiz', views.quiz, name='quiz'),
     path('submit_answer', views.submit_answer, name='submit_answer'),
+    path('get_results', views.get_results, name='get_results'),
 ]

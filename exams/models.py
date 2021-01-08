@@ -20,5 +20,6 @@ class Questions(models.Model):
 
 class Answers(models.Model):
 	user_key = models.ForeignKey(Extendedusers, on_delete=models.CASCADE)
-	question_key = models.ForeignKey(Questions, on_delete=models.CASCADE)
+	question_key = models.IntegerField(null=False)
 	user_answer = models.CharField(max_length=1000, null=True)
+	is_submitted = models.BooleanField(default=False)

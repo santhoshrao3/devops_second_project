@@ -5,7 +5,6 @@
 {% block content %}
 <br>
 <br>
-
 <h1 class='text-center'>
 	Question {{data.number}}
 </h1>
@@ -32,14 +31,20 @@
 					<br>
 					<input type="radio" name="option" value="{{i.is_correct}}"> {{i.is_correct}}
 					<input type="hidden" id = "que_id" value="{{i.id}}">
+					<input id="correct_ans" type="hidden" value="{{i.is_correct}}">
 				</div>
         </div>
 		</div>
 	</div>
 </div>
-<div class="col-md-12 text-center">
+{% if is_submitted %}
+{% else %}
+<div id="submit_btn" class="col-md-12 text-center">
 	<button id="ans_btn" class="btn btn-primary bg-success" type="submit">Submit</button>
+	<br>
+
 </div>
+{% endif %}
 </form>
 <br>
 {% endfor %}
@@ -52,22 +57,20 @@
         <a class="page-link" href="?page={{data.next_page_number}}&id={{id}}">Next</a>
       </li>
     {% else %}
-      <li class="page-item disabled">
-        <a class="page-link">END TEST</a>
+      <li class="page-item">
+        <a href="{% url 'get_results' %}?quiz_id={{id}}" class="page-link">END TEST</a>
       </li>
     {% endif %}
   </ul>
 {% endif %}
-
-
 
 <script type="text/javascript">
 	window.onload = begin;
 	var saveAns;
 	
 	function begin(){
-		saveAns = document.getElementById('ans_btn');
-		saveAns.onclick = saveAnswer;
+			saveAns = document.getElementById('ans_btn');
+			saveAns.onclick = saveAnswer;
 	}
 	function saveAnswer(e){
 		e.preventDefault(); 
@@ -79,6 +82,18 @@
 		alert("Answer Submitted!")
 		var req = new XMLHttpRequest();
 		var url = 'submit_answer?que_id='+que_id+'&selected_option='+ans;
+		// Disable button and Show Correct Ans on Successful submit
+		req.onreadystatechange = function(){
+          if (this.readyState == 4 && this.status == 200){
+				$('#ans_btn').prop('disabled', true);
+				var get_btn = document.getElementById('submit_btn');
+				var h3 = document.createElement('h3'); 
+				var correct_ans = $('#correct_ans').val();
+				h3.innerHTML = 'Correct Answer is: ' + correct_ans;
+				h3.setAttribute("style", "font-weight: bolder; font-size: small;");
+				get_btn.appendChild(h3);
+			}
+		};
 		req.open("GET", url, true);
 		req.send();
 	}

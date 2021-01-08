@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<br>
+<br> 
+
+<div class="text-center">
+	<a href="{% url 'quiz' %}?id={{id}}">
+		<button class="btn btn-primary" type="submit"> 
+			Start Quiz
+		</button>
+	</a>
+	<br>
+	<br>
+	<button class="btn btn-primary" type="submit" onClick="javascript:history.go(-2);">
+		Cancle
+	</button>
+</div>
+
+{% endblock %}

@@ -1,27 +1,46 @@
+
 {% extends 'base.html' %}
+
 {% load static %}
 {% block content %}
 <br>
 <br>
 
 <h1 class='text-center'>
-	Question
+	Question {{data.number}}
 </h1>
-
-{% for data in data %}
+<br>
+{% for i in data %}
+<form>
+	{% csrf_token %}
 <div class="row row-cols-1 row-cols-md-2">
 	<div class="col mb-4">
 		<div class="card">
-				<div class="card-body border">
-        <h5 class="card-title">{{data.question}}</h5>
-        <h5>1. {{data.option1}}</h5>
-        <h5>2. {{data.option2}}</h5>
-        <h5>3. {{data.option3}}</h5>
-        <h5>4. {{data.is_correct}}</h5>
+				<div class="card-body">
+        <h5 class="card-title font-weight-bold">{{i.question}}</h5>
+        <div id="rad-btn">
+					<hr>
+					<br>
+					<input type="radio" name="option" value="{{i.option1}}"> {{i.option1}}
+					<br>
+					<br>
+					<input type="radio" name="option" value="{{i.option2}}"> {{i.option2}}
+					<br>
+					<br>
+					<input type="radio" name="option" value="{{i.option3}}"> {{i.option3}}
+					<br>
+					<br>
+					<input type="radio" name="option" value="{{i.is_correct}}"> {{i.is_correct}}
+					<input type="hidden" id = "que_id" value="{{i.id}}">
+				</div>
         </div>
 		</div>
 	</div>
 </div>
+<div class="col-md-12 text-center">
+	<button id="ans_btn" class="btn btn-primary bg-success" type="submit">Submit</button>
+</div>
+</form>
 <br>
 {% endfor %}
 <br>
@@ -30,14 +49,144 @@
   <ul class="pagination">
     {% if data.has_next %}
       <li class="page-item">
-        <a class="page-link" href="?page={{ data.next_page_number }}">Next</a>
+        <a class="page-link" href="?page={{data.next_page_number}}&id={{id}}">Next</a>
       </li>
     {% else %}
       <li class="page-item disabled">
-        <a class="page-link">END</a>
+        <a class="page-link">END TEST</a>
       </li>
     {% endif %}
   </ul>
 {% endif %}
 
-{% endblock %}
+
+
+<script type="text/javascript">
+	window.onload = begin;
+	var saveAns;
+	
+	function begin(){
+		saveAns = document.getElementById('ans_btn');
+		saveAns.onclick = saveAnswer;
+	}
+	function saveAnswer(e){
+		e.preventDefault(); 
+		var selected = $("#rad-btn input[type='radio']:checked");
+		if (selected.length > 0) {
+					ans = selected.val();
+		}
+		var que_id = $('#que_id').val();
+		alert("Answer Submitted!")
+		var req = new XMLHttpRequest();
+		var url = 'submit_answer?que_id='+que_id+'&selected_option='+ans;
+		req.open("GET", url, true);
+		req.send();
+	}
+	</script>
+	
+	{% endblock %}
+	<!-- $(document).ready(function() {
+		$(document).on('submit', '#ans-btn',function(e){
+			e.preventDefault(); 
+			var selected = $("#rad-btn input[type='radio']:checked");
+			console.log(selected);
+			if (selected.length > 0) {
+					selectedVal = selected.val();
+					console.log(selectedVal);
+				}
+			$.ajax({
+					type:'POST',
+					url:'{% url "submit_answer" %}',
+					data:{
+							que_id: "{{data.id}}",
+							selected_option: selectedVal,
+							csrfmiddlewaretoken:$('input[name=csrfmiddlewaretoken]').val(),
+							action: 'post'
+					},
+					success:function(json){
+							console.log("submitted")
+					},
+					error : function(xhr,errmsg,err) {
+					console.log("something went wrong!"); // provide a bit more info about the error to the console
+			}
+			});
+		});
+		}); -->
+
+
+
+
+<!-- 
+// var checkAns;
+// 	$( document ).ready(function() {
+// 		checkAns = function(){
+// 		var selected = $("#rad-btn input[type='radio']:checked");
+// 		if (selected.length > 0) {
+// 			selectedVal = selected.val();
+// 		} //next-pg
+// 		var a = document.getElementById('next-pg');
+// 		$("next-pg").prop("href", "?page={{ data.next_page_number }}&option="+selectedVal+"&submit=true")
+// 	};
+// });
+
+
+
+
+
+	// function checkAnswer(correctAnswer) {
+	// 	var score = parseInt($('#ans-btn').val());
+	// 	console.log(score)
+	// 	var selectedVal = "";
+	// 	var selected = $("#rad-btn input[type='radio']:checked");
+	// 	var answer = document.getElementById('ans');
+	// 	if (selected.length > 0) {
+	// 		selectedVal = selected.val();
+	// 		answer.innerHTML = "";
+	// 		var h5 = document.createElement('h5');
+	// 			if(selectedVal == correctAnswer){
+	// 				h5.innerHTML = 'Correct Answer!';
+	// 				answer.appendChild(h5);
+	// 				score += 1;
+	// 			}else{
+	// 				h5.innerHTML = 'Wrong Answer! Correct answer is:' +  correctAnswer;
+	// 				answer.appendChild(h5);
+	// 			}
+	// 			$("#ans-btn").prop("disabled", true);
+	// 			$("#ans-btn").val(score);
+	// 	};	
+	// }
+
+	// function endTest(){
+	// 	var score = parseInt($('#ans-btn').val());
+	// 	var end = document.getElementById('score');
+	// 	var h2 = document.createElement('h2');
+	// 	h2.innerHTML = score;
+	// 	h2.setAttribute("style", "font-weight: bolder; font-color: green;");
+	// 	end.appendChild(h2);
+	// }
+
+	// 	function checkAnswer(correctAnswer) {
+	// 		var selectedVal = "";
+	// 		var req = new XMLHttpRequest();
+	// 		var url = "?page={{data.number}}&submit=true";
+	// 		var selected = $("#rad-btn input[type='radio']:checked");
+			
+	// 		// var answer = document.getElementById('ans');
+	// 		if (selected.length > 0) {
+	// 			selectedVal = selected.val();
+	// 			// answer.innerHTML = "";
+	// 			// var h5 = document.createElement('h5');
+	// 				if(selectedVal == correctAnswer){
+	// 					h5.innerHTML = 'Correct Answer!';
+	// 					answer.appendChild(h5);
+	// 					score += 1;
+	// 				}else{
+	// 					h5.innerHTML = 'Wrong Answer! Correct answer is:' +  correctAnswer;
+	// 					answer.appendChild(h5);
+	// 				}
+	// 				$("#ans-btn").prop("disabled", true);
+	// 				$("#ans-btn").val(score);
+	// 		};	
+	// 		req.open("GET", url, true);
+  //     req.send();
+	// } -->

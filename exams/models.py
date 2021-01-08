@@ -17,5 +17,8 @@ class Questions(models.Model):
 	option3 = models.CharField(max_length=1000, null=True)
 	is_correct = models.CharField(max_length=1000, null=True)
 
-	def __str__(self):
-		return self.question
+
+class Answers(models.Model):
+	user_key = models.ForeignKey(Extendedusers, on_delete=models.CASCADE)
+	question_key = models.ForeignKey(Questions, on_delete=models.CASCADE)
+	user_answer = models.CharField(max_length=1000, null=True)

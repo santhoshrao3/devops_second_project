@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from .models import Questions, Extendedusers, Quiz
+from django.http import HttpResponse, JsonResponse
+from .models import Questions, Extendedusers, Quiz, Answers
 import requests, json, random
 from django.core.paginator import (Paginator,
 EmptyPage, PageNotAnInteger)
@@ -68,23 +68,75 @@ def school(request, id):
 	data = Quiz.objects.filter(user_school_id=id)
 	return render(request, 'accounts/show_quiz.html',{'data': data})
 
-def quiz(request, id):
-	questions = Questions.objects.filter(quiz_id=id)
-	page = request.GET.get('page', 1)
+# TODO serve an AJAX POST request and save the ans in DB
+def submit_answer(request):
+	question_id = request.GET.get('que_id')
+	print('line 74',question_id)
+	user_ans = request.GET.get('selected_option')
+	print('line 76',user_ans)
+	user = Extendedusers.objects.get(user=request.user.id)
+	question = Questions.objects.get(id=question_id)
+	response = {}
+	print('line 80',question)
+	# breakpoint()
+	try:
+		Answers.objects.create(user_key=user, 
+		question_key=question,user_answer=user_ans)
+		response['status'] = True
+		print('line 83')
+	except Exception as e:
+		response['status'] = False
+		print(e)
+	return JsonResponse(response)
 
+# Get confirmation to begin quiz
+def begin_quiz(request, id):
+	return render(request, 'exams/begin_quiz.html', {'id':id})
+
+# Load the quiz page and paginate
+def quiz(request):
+	quiz_id = request.GET.get('id')
+	questions = Questions.objects.filter(quiz_id=quiz_id)
+	page = request.GET.get('page', 1)
+	print('line 97: ', page)
+	# selected_option = request.GET.get('option')
+	# print('line 76: ', selected_option)
+	# score = request.GET.get('score')
+	# print('score line 77: ', score)
+	question = paginate(request, page, questions)
+	# res = check_answer(selected_option, question)
+	# if not score:
+	# 	score = 0
+	# print('line 84: ', res)
+
+	# score = int(score) + 1
+	# print('line 93: ', score)
+
+	return render(request, 'exams/quiz.html', {'questions':questions,
+	'data': question, 'id':quiz_id})
+
+# Paginate the questions
+def paginate(request, page, questions):
 	paginator = Paginator(questions, 1)
 	try:
 		question = paginator.page(page)
+		return question
 	except PageNotAnInteger:
 		question = paginator.page(1)
+		return question
 	except EmptyPage:
 		question = paginator.page(paginator.num_pages)
+		return question
 
-	return render(request, 'exams/quiz.html', { 'data': question })
-	
-	
 	# options = []
 	# for data in data:
 	# 	options.append(data.option1, data.option2, data.option3,
 	# 	data.is_correct)
-	
+
+# Check if the answer is correct
+def check_answer(selected_option, question):
+	for data in question:
+		if data.is_correct == selected_option:
+			return True
+		else:
+			return False

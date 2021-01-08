@@ -12,7 +12,7 @@
 <div class="row row-cols-1 row-cols-md-2">
 	<div class="col mb-4">
 		<div class="card">
-			<a href="{% url 'quiz' id=data.id %}">
+			<a href="{% url 'begin_quiz' id=data.id %}">
 				<img src="{% static 'quiz2.png' %}" class="card-img-top" alt="..." height="200px">
 				<div class="card-body text-center border">
 				<h5 class="card-title">{{data.quiz_title}}</h5>
@@ -23,6 +23,7 @@
 </div>
 
 {% endfor %}
+<!-- If School is logged in then allow to create a new quiz -->
 {% if is_school %}
 <form action="{% url 'create_quiz' %}" enctype="multipart/form-data" method="GET">
 	<div class="col-md-12 text-center">

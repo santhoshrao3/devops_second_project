@@ -5,17 +5,31 @@
 <br>
 <br> 
 
+
 <div class="text-center">
-	<a href="{% url 'quiz' %}?id={{id}}">
-		<button class="btn btn-primary" type="submit"> 
-			Start Quiz
-		</button>
-	</a>
+	<div class="row text-center">
+		<div class="col text-center">
+			<h4>
+				Do you wanna start the quiz?
+			</h4>
+			<a href="{% url 'quiz' %}?pub_date={{ date }}&id={{ id }}">
+				<button class="btn btn-primary bg-success" type="submit"> 
+					Start Quiz
+				</button>
+			</a>
+		</div>
+
+		<div class="col text-center">
+			<h4>
+				Do you wanna come back later?
+			</h4>
+			<button class="btn btn-primary bg-danger" type="submit" onClick="javascript:history.go(-1);">
+				Cancle
+			</button>
+		</div>
+	</div>
 	<br>
-	<br>
-	<button class="btn btn-primary" type="submit" onClick="javascript:history.go(-2);">
-		Cancle
-	</button>
+
 </div>
 
 {% endblock %}

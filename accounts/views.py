@@ -13,8 +13,8 @@ def show_quiz(request):
 	user = Extendedusers.objects.get(user=request.user)
 	# If the user is school, show its' quizes
 	if user.is_school:
-		data = Quiz.objects.filter(user_school_id=request.user.id)
-		print(type(data))
+		data = Quiz.objects.filter(
+			user_id=request.user.id).order_by('-pub_date')
 		is_school = True
 		return render(request, 'accounts/show_quiz.html',{
 		'is_school': is_school, 'data': data})

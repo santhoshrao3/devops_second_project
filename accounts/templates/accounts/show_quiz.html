@@ -4,18 +4,35 @@
 <br>
 <br>
 
+{% if is_school %}
+<h1 class='text-center'>
+	My Quizes
+</h1>
+{% else %}
 <h1 class='text-center'>
 	Available Quizes
 </h1>
+{% endif %}
+
+{% if msg %}
+<h4 class="text-success text-center">{{ msg }}</h4>
+{% endif %}
 
 {% for data in data %}
+
 <div class="row row-cols-1 row-cols-md-2">
 	<div class="col mb-4">
 		<div class="card">
-			<a href="{% url 'begin_quiz' id=data.id %}">
+			<a href="{% url 'begin_quiz' id=data.id %}?pub_date={{ data.pub_date }}">
 				<img src="{% static 'quiz2.png' %}" class="card-img-top" alt="..." height="200px">
-				<div class="card-body text-center border">
-				<h5 class="card-title">{{data.quiz_title}}</h5>
+				<hr>
+				<div class="card-body row">
+					<div class="col text-center">
+						<h5 class="card-title">{{ data.quiz_title }}</h5>
+					</div>
+					<div class="col text-center">
+						<h5 class="pub_date">{{ data.pub_date }}</h5>
+					</div>
 				</div>
 			</a>
 		</div>

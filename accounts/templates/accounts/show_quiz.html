@@ -8,6 +8,11 @@
 <h1 class='text-center'>
 	My Quizes
 </h1>
+<br>
+<h5 class="text-center bg-warning text-black">
+	Please note that you must login as a student to take the quiz.
+</h5>
+<br>
 {% else %}
 <h1 class='text-center'>
 	Available Quizes
@@ -23,6 +28,18 @@
 <div class="row row-cols-1 row-cols-md-2">
 	<div class="col mb-4">
 		<div class="card">
+			{% if is_school %}
+				<img src="{% static 'quiz2.png' %}" class="card-img-top" alt="..." height="200px">
+				<hr>
+				<div class="card-body row">
+					<div class="col text-center">
+						<h5 class="card-title">{{ data.quiz_title }}</h5>
+					</div>
+					<div class="col text-center">
+						<h5 class="pub_date">{{ data.pub_date }}</h5>
+					</div>
+				</div>
+			{% else %}
 			<a href="{% url 'begin_quiz' id=data.id %}?pub_date={{ data.pub_date }}">
 				<img src="{% static 'quiz2.png' %}" class="card-img-top" alt="..." height="200px">
 				<hr>
@@ -35,6 +52,7 @@
 					</div>
 				</div>
 			</a>
+			{% endif %}
 		</div>
 	</div>
 </div>

@@ -11,6 +11,29 @@ from datetime import datetime
 from dateutil import parser
 
 
+# Show Quiz View
+@login_required(login_url="/accounts/login")
+def show_quiz(request):
+	user = Extendedusers.objects.get(user=request.user)
+	# If the user is school, show its' quizes
+	if user.is_school:
+		data = Quiz.objects.filter(
+			user_id=request.user.id).order_by('-pub_date')
+		is_school = True
+		return render(request, 'accounts/show_quiz.html',{
+		'is_school': is_school, 'data': data})
+	else:
+		# If a user is a student, show the list of schools
+		is_school = False
+		data = Extendedusers.objects.filter(
+			is_school=True).order_by('school_name')
+		page = request.GET.get('page', 1)
+		# total elements allowed on one page
+		total_page_count = 5
+		school_list = paginate(request, page, data, total_page_count)
+		return render(request, 'exams/show_schools.html',{
+		'data': school_list})
+
 # Make a new quiz entry in DB
 @login_required(login_url="/accounts/login")
 def create_quiz(request):
@@ -107,7 +130,9 @@ def quiz(request):
 	print('line 97: ', page)
 	pub_date = request.GET.get('pub_date')
 	print('line 109.............', pub_date)
-	question = paginate(request, page, questions)
+	# total elements allowed on one page
+	total_page_count = 1
+	question = paginate(request, page, questions, total_page_count)
 	for i in question:
 		que_id = i.id
 	answers = Answers.objects.filter(user_key_id=request.user.id,
@@ -123,21 +148,23 @@ def quiz(request):
 	'pub_date':pub_date})
 
 # Paginate the questions
-def paginate(request, page, questions):
-	paginator = Paginator(questions, 1)
+def paginate(request, page, questions, total_page_count):
+	paginator = Paginator(questions, total_page_count)
 	try:
-		question = paginator.page(page)
-		return question
+		elements = paginator.page(page)
+		return elements
 	except PageNotAnInteger:
-		question = paginator.page(1)
-		return question
+		elements = paginator.page(1)
+		return elements
 	except EmptyPage:
-		question = paginator.page(paginator.num_pages)
-		return question
+		elements = paginator.page(paginator.num_pages)
+		return elements
 
 '''
  Get the results on test end 
- and show the time taken in readble format
+ and show the time taken in readble format.
+ If a user has left the quiz in middle then the Quiz filter condition last()
+ will allow us to fetch the rescent entery for start time.
 '''
 @login_required(login_url="/accounts/login")
 def get_results(request):

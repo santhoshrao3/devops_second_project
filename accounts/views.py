@@ -7,25 +7,6 @@ from .models import Extendedusers
 from exams.models import Quiz, Questions
 
 
-# Show Quiz View
-@login_required(login_url="/accounts/login")
-def show_quiz(request):
-	user = Extendedusers.objects.get(user=request.user)
-	# If the user is school, show its' quizes
-	if user.is_school:
-		data = Quiz.objects.filter(
-			user_id=request.user.id).order_by('-pub_date')
-		is_school = True
-		return render(request, 'accounts/show_quiz.html',{
-		'is_school': is_school, 'data': data})
-	else:
-		# If a user is a student, show the list of schools
-		is_school = False
-		data = Extendedusers.objects.filter(is_school=True)
-		return render(request, 'exams/show_schools.html',{
-		'data': data})
-	
-
 # Signup method
 def signup(request, cli):
 	print('line 12', cli)

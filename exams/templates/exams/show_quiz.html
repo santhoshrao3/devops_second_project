@@ -19,8 +19,13 @@
 </h1>
 {% endif %}
 
-{% if msg %}
-<h4 class="text-success text-center">{{ msg }}</h4>
+<!-- Show success message after successful creatiion of quiz-->
+{% if messages %}
+<div class="text-center alert alert-success alert-dismissible">
+  {% for message in messages %}
+    <p>{{ message }}</p>
+  {% endfor %}
+</div>
 {% endif %}
 
 {% for data in data %}
@@ -70,5 +75,29 @@
 <br>
 <br>
 {% endif %}
+
+{% if data.has_other_pages %}
+  <ul class="pagination">
+	<!-- Previous page -->
+	{% if data.has_previous %}
+		<li class="page-item">
+			<a class="page-link" href="?page={{ data.previous_page_number }}"> Previous</a>
+		</li>
+	{% else %}
+		<li class="page-item disabled"></li>
+	{% endif %}
+	<!-- Next page -->
+    {% if data.has_next %}
+      <li class="page-item">
+        <a class="page-link" href="?page={{ data.next_page_number }}">Next</a>
+      </li>
+	{% else %}
+	<li class="page-item disabled"></li>
+    {% endif %}
+  </ul>
+{% endif %}
+<br>
+<br>
+<br>
 
 {% endblock %}

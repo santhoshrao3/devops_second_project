@@ -9,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 from datetime import datetime
 from dateutil import parser
+from django.contrib import messages
 
 
 # Show Quiz View
@@ -20,8 +21,13 @@ def show_quiz(request):
 		data = Quiz.objects.filter(
 			user_id=request.user.id).order_by('-pub_date')
 		is_school = True
-		return render(request, 'accounts/show_quiz.html',{
-		'is_school': is_school, 'data': data})
+		page = request.GET.get('page', 1)
+		# total elements allowed on one page
+		total_page_count = 5
+		quiz_list = paginate(request, page, data, total_page_count)
+		return render(request, 'exams/show_quiz.html',{
+		'is_school': is_school, 'data': quiz_list})
+	# If user is student then show available schools
 	else:
 		# If a user is a student, show the list of schools
 		is_school = False
@@ -49,8 +55,9 @@ def create_quiz(request):
 				msg = 'Quiz Created successfully!'
 				data = Quiz.objects.filter(
 					user_id=request.user.id).order_by('-pub_date')
-				return render(request, 'accounts/show_quiz.html', 
-				{'is_school': True,'data':data, 'msg':msg})
+				# sends msg on redirect
+				messages.success(request, msg)
+				return redirect('show_quiz')
 			else:
 				error = 'Something went wrong. Please try again later.'
 				return render(request, 'exams/create_quiz.html',
@@ -88,7 +95,11 @@ def get_questions(request, quiz):
 @login_required(login_url="/accounts/login")
 def school(request, id):
 	data = Quiz.objects.filter(user_id=id).order_by('-pub_date')
-	return render(request, 'accounts/show_quiz.html',{'data': data})
+	page = request.GET.get('page', 1)
+	# total elements allowed on one page
+	total_page_count = 5
+	quiz_list = paginate(request, page, data, total_page_count)
+	return render(request, 'exams/show_quiz.html',{'data': quiz_list})
 
 # TODO serve an AJAX POST request and save the ans in DB
 @login_required(login_url="/accounts/login")

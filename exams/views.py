@@ -101,19 +101,21 @@ def school(request, id):
 	quiz_list = paginate(request, page, data, total_page_count)
 	return render(request, 'exams/show_quiz.html',{'data': quiz_list})
 
-# TODO serve an AJAX POST request and save the ans in DB
+# Saves the answer to the DB when user submits it.
 @login_required(login_url="/accounts/login")
 def submit_answer(request):
 	question_id = request.GET.get('que_id')
 	user_ans = request.GET.get('selected_option')
 	user = Extendedusers.objects.get(user=request.user.id)
 	response = {}
+	# In case we want to enable multiple time submission for an answer
 	try:
 		answer = Answers.objects.get(user_key=user, 
 		question_key=question_id, is_submitted=True)
 		answer.user_answer = user_ans
 		answer.save()
 		response['status'] = True
+		# Usually triggered case when answer is submitted
 	except Exception as e:
 		Answers.objects.create(user_key=user, question_key=question_id,
 		user_answer=user_ans, is_submitted=True)
@@ -125,8 +127,6 @@ def submit_answer(request):
 def begin_quiz(request, id):
 	pub_date = request.GET.get('pub_date')
 	date = parser.parse(pub_date)
-	# pub_date = datetime.strptime(pub_date, "YYYY-MM-DD HH:MM[:ss[.uuuuuu]][TZ]")
-	print('line 93: ', date)
 	quiz = Quiz.objects.create(user_id=request.user.id,
 	pub_date=date, start_time=timezone.datetime.now())
 	return render(request, 'exams/begin_quiz.html', {'id':id,
@@ -138,9 +138,7 @@ def quiz(request):
 	quiz_id = request.GET.get('id')
 	questions = Questions.objects.filter(quiz_id=quiz_id)
 	page = request.GET.get('page', 1)
-	print('line 97: ', page)
 	pub_date = request.GET.get('pub_date')
-	print('line 109.............', pub_date)
 	# total elements allowed on one page
 	total_page_count = 1
 	question = paginate(request, page, questions, total_page_count)
@@ -158,7 +156,7 @@ def quiz(request):
 	'data': question, 'id':quiz_id,'is_submitted':is_submitted,
 	'pub_date':pub_date})
 
-# Paginate the questions
+# Pagination method
 def paginate(request, page, questions, total_page_count):
 	paginator = Paginator(questions, total_page_count)
 	try:

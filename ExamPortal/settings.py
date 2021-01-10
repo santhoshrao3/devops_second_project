@@ -9,8 +9,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
-DEBUG = False
+
+# In Production
+# SECRET_KEY = os.environ.get('SECRET_KEY')
+# DEBUG = False
+
+# In development
+SECRET_KEY = '1x+r^6_zw$obx-7&j8t3b1&w0juiq4h0b47@2#tb9i8im^iw+f'
+DEBUG = True
+
 
 ALLOWED_HOSTS = ['localhost', 
 'quizzsup.herokuapp.com'
@@ -38,7 +45,7 @@ MIDDLEWARE = [
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
 	'django.contrib.messages.middleware.MessageMiddleware',
 	'django.middleware.clickjacking.XFrameOptionsMiddleware',
-	'whitenoise.middleware.WhiteNoiseMiddleware',
+	# 'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'ExamPortal.urls'
@@ -62,7 +69,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'ExamPortal.wsgi.application'
 
 
-# Database
+# Database In Development
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
 # DATABASES = {
@@ -72,6 +79,7 @@ WSGI_APPLICATION = 'ExamPortal.wsgi.application'
 # 	}
 # }
 
+# Database In Production
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('HEROKU_POSTGRESQL_NAVY_URL')
@@ -118,6 +126,7 @@ STATICFILES_DIRS = [
 	os.path.join(BASE_DIR, 'ExamPortal/static/'),
 ]
 
+# This avoids static files not loading issue on server
 COMPRESS_ENABLED = os.environ.get('COMPRESS_ENABLED', False)
 # STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
@@ -126,6 +135,4 @@ STATIC_URL = '/static/'
 TEMPLATE_DIRS = (
 	os.path.join(BASE_DIR, 'templates'),
 	os.path.join(BASE_DIR, 'static'),
-
-	# Add to this list all the locations containing your static files 
 )

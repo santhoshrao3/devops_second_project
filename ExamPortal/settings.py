@@ -120,3 +120,6 @@ TEMPLATE_DIRS = (
 
 	# Add to this list all the locations containing your static files 
 )
+
+import django_heroku
+django_heroku.settings(locals())

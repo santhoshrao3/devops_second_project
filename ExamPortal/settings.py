@@ -11,7 +11,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', 
 'quizzsup.herokuapp.com'
@@ -75,7 +75,7 @@ WSGI_APPLICATION = 'ExamPortal.wsgi.application'
 
 DATABASES = {
     'default': dj_database_url.config(
-        default=os.environ.get('DATABASE_URL')
+        default=os.environ.get('HEROKU_POSTGRESQL_NAVY_URL')
     )
 }
 

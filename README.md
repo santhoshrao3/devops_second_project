@@ -9,5 +9,5 @@ This is an Exam Portal where a school can generate general knowledge quizes usin
 4. Run the following commands to migrate the Database and start the project on your localhost \
   $ python manage.py makemigrations \
   $ python manage.py migrate \
-  $ python manage.py runserver \
+  $ python manage.py runserver
 5. Then you can login using schools to create new quizes and then login by student to attend the quiz. You can create multiple schools or student accounts.

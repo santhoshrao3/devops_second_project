@@ -8,8 +8,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', default=False, cast=bool)
+SECRET_KEY = os.environ.get('SECRET_KEY')
+DEBUG = 'False'
 
 ALLOWED_HOSTS = ['http://localhost:8000/', 'https://quizzsup.herokuapp.com']
 
@@ -120,6 +120,3 @@ TEMPLATE_DIRS = (
 
 	# Add to this list all the locations containing your static files 
 )
-
-import django_heroku
-django_heroku.settings(locals())

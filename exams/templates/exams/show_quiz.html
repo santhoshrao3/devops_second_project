@@ -34,7 +34,7 @@
 	<div class="col mb-4">
 		<div class="card">
 			{% if is_school %}
-				<img src="{% static 'quiz2.png' %}" class="card-img-top" alt="..." height="200px">
+				<img src="{% static 'ExamPortal/static/quiz2.png' %}" class="card-img-top" alt="..." height="200px">
 				<hr>
 				<div class="card-body row">
 					<div class="col text-center">
@@ -46,7 +46,7 @@
 				</div>
 			{% else %}
 			<a href="{% url 'begin_quiz' id=data.id %}?pub_date={{ data.pub_date }}">
-				<img src="{% static 'quiz2.png' %}" class="card-img-top" alt="..." height="200px">
+				<img src="{% static 'ExamPortal/static/quiz2.png' %}" class="card-img-top" alt="..." height="200px">
 				<hr>
 				<div class="card-body row">
 					<div class="col text-center">

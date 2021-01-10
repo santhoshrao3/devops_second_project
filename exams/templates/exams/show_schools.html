@@ -13,7 +13,7 @@
 {% for data in data %}
 	<div class="card">
 		<a href="{% url 'school' id=data.user_id %}">
-			<img src="{% static 'ExamPortal/static/school.png' %}" class="card-img-top" alt="..." height="200px">
+			<img src="{% static 'school.png' %}" class="card-img-top" alt="..." height="200px">
 		<div class="card-body text-center border">
 			<h5 class="card-title">{{data.school_name}}</h5>
 		</div>
